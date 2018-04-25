@@ -63,7 +63,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         clf = GridSearchCV(model, Parameters[1], cv=2)
         clf.fit(XEstimate, Y_E)
         proba = clf.predict_proba(XValidate)
-        accuracy = clf.score(XValidate, YValidate)
+        accuracy = clf.score(XValidate, Y_V)
 
         estParams = {
             'hyper': clf.best_params_,
@@ -83,7 +83,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         clf = OneVsRestClassifier(model)
         clf.fit(XEstimate, Y_E)
         proba = clf.predict_proba(XValidate)
-        accuracy = clf.score(XValidate, YValidate)
+        accuracy = clf.score(XValidate, Y_V)
 
         estParams = {
             'model': clf
@@ -99,7 +99,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         clf = OneVsRestClassifier(GaussianProcessClassifier(kernel = kernal_rbf))
         clf.fit(XEstimate, Y_E)
         proba = clf.predict_proba(XValidate)
-        accuracy = clf.score(XValidate, YValidate)
+        accuracy = clf.score(XValidate, Y_V)
         estParams = {
             'model': clf
         }
