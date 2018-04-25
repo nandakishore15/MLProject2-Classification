@@ -115,5 +115,5 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
     estParams['classLabels'] = classLabels
     estParams['accuracy'] = accuracy
 
-    return proba, estParams
+    return classLabels, estParams
 

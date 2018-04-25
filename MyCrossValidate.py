@@ -25,7 +25,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     """
     
     # the number of samples in 'XTrain'
-    N = np.shape(Labels)[0]
+    N = np.shape(ClassLabels)[0]
     Nc = np.shape(ClassLabels)[1]
     
     
