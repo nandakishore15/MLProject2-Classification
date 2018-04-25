@@ -56,6 +56,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     Ytrain = []
     EstParameters = []
     for i in range(0, Nf):
+        print 'Starting', (i+1), 'cross validation...'
         Xe = E_X[i]
         Xv = V_X[i]
         Ce = E_Y[i]
@@ -63,6 +64,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
         ## Call function 'TrainMyClassifier'. Here I assume all the inputs except 'Parameters' are numpy arrays.
         [y, par] = TrainMyClassifier(XEstimate = Xe, YEstimate = Ce, XValidate = Xv,  YValidate = Cv, Parameters = Parameters)
         Ytrain.append(y)
+        print 'Finish', (i+1), 'cross validation!'
         EstParameters.append(par)
     Ytrain = np.asarray(Ytrain)
     EstParameters = np.asarray(EstParameters)
@@ -74,17 +76,21 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     ClassNames = ClassNames.append("NonClass")
     ClassNames = np.asarray(ClassNames)
     for i in range(0, Nf):
+        print 'Starting computing', (i+1), 'confusion matrix...'
         cur_y = Ytrain[i]
         cur_label = V_Y[i]
         [A, a] = MyConfusionMatrix(Y = cur_y, ClassNames = ClassNames, ClassLabels = cur_label)
+        print 'Finish', (i+1), 'confusion matrix!'
         EstConfMatrices.append(A)
     EstConfMatrices = np.asarray(EstConfMatrices)
     
     
     # step 4: produce a confusion matrix for all of XTrain using all the class labels
+    print 'Starting computing the overall confusion matrix...'
     ConfMatrix = []
     y_all = flatten(np.array(Ytrain).tolist())
     [ConfMatrix, a] = MyConfusionMatrix(Y = y_all, ClassNames = ClassNames, ClassLabels = ClassLabels)
+    print 'Finish computing the overall confusion matrix!'
 
     
     # return
