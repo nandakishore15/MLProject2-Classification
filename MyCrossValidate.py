@@ -1,21 +1,28 @@
-## Function 'MyCrossValidate' performs the cross validation on training dataset
-## INPUTS:
-##        XTrain: a numpy array, shape = [N, D]
-##        ClassLabels: a numpy array, shape = [N, Nc], representing the true class labels 
-##        Parameters: used in 'TrainMyClassifier' function
-##        Nf: the number of folds
-## RETURNS:
-##         Ytrain: a numpy array, representing the estimated class labels for each validation sample
-##         EstParameters: a numpy array of estimated parameters for each Vn (Validation Set)
-##         EstConfMatrices: a numpy array of confusion matrix for each Vn (Validation Set)
-##         ConfMatrix: a numpy array, shape = [Nc, Nc], the overall confusion matrix
-###############################################################################
-## Date: 04/21/2018
-## Author: Chuji Luo
-## Email: cjluo@ufl.edu
+"""
+Date: 04/21/2018
+Author: Chuji Luo
+Email: cjluo@ufl.edu
+"""
+import numpy as np
+from compiler.ast import flatten
+from MyConfusionMatrix import MyConfusionMatrix
+from TrainMyClassifier import TrainMyClassifier
+
 def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
-    import numpy as np
-    from compiler.ast import flatten
+
+    """
+    Function 'MyCrossValidate' performs the cross validation on training dataset
+    INPUTS:
+          XTrain: a numpy array, shape = [N, D]
+          ClassLabels: a numpy array, shape = [N, Nc], representing the true class labels
+          Parameters: used as a INPUT of 'TrainMyClassifier' function
+          Nf: the number of folds
+    RETURNS:
+          Ytrain: a numpy array, representing the estimated class labels for each validation sample
+          EstParameters: a numpy array of estimated parameters for each Vn (Validation Set)
+          EstConfMatrices: a numpy array of confusion matrix for each Vn (Validation Set)
+          ConfMatrix: a numpy array, shape = [Nc+1, Nc+1], the overall confusion matrix
+    """
     
     # the number of samples in 'XTrain'
     N = np.shape(ClassLabels)[0]
@@ -47,7 +54,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     EstParameters = []
     for i in range(0, Nf):
         Xe, Xv, Ce, Cv = E_X[i], V_X[i], E_Y[i], V_Y[i]
-        ## Call function 'TrainMyClassifier'. Here I assume all the inputs excepte 'Parameters' are numpy arrays.
+        ## Call function 'TrainMyClassifier'. Here I assume all the inputs except 'Parameters' are numpy arrays.
         [y, par] = TrainMyClassifier(XEstimate = Xe, XValidate = Xv, ClassLabelsEstimate = Ce, ClassLabelsValidate = Cv, Parameters = Parameters)
         Ytrain.append(y)
         EstParameters.append(par)
@@ -56,7 +63,9 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     
     # step 3: produce a confusion matrix Cn, for each Vn
     EstConfMatrices = []
-    ClassNames = range(0, Nc)
+    ClassNames = range(1, Nc+1)
+    ClassNames = ClassNames.append("NonClass")
+    ClassNames = np.asarray(ClassNames)
     for i in range(0, Nf):
         cur_y = Ytrain[i]
         cur_label = V_Y[i]
