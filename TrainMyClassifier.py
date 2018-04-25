@@ -25,7 +25,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
     OUTPUTS:
           classLabels - The estimated label values for each XValidate entry
           EstParams - The estimated parameters corresponding to each algorithm
-    """ 
+    """
 
     threshold = 0.5 # metric to classify non-class entry
     Algorithm = Parameters[0]
@@ -38,14 +38,15 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
             Y_E.append(lis.index(1))
         else:
             Y_E.append(-1)
-    
+
     #TODO Check this with others
-    
+
+    Y_E = np.array(Y_E)
     validEntries = np.where(Y_E != -1)
 
     XEstimate = XEstimate[validEntries]
-    YEstimate = YEstimate[validEntries]
-    
+    Y_E = Y_E[validEntries]
+
     # extract true labels validate
     Y_V = []
     Labels = YValidate.tolist()
@@ -54,6 +55,8 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
             Y_V.append(lis.index(1))
         else:
             Y_V.append(-1)
+
+    Y_V = np.array(Y_V)
 
     if Algorithm == "SVM":
         model = SVC(decision_function_shape='ovo', probability=True)
@@ -81,7 +84,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         clf.fit(XEstimate, Y_E)
         proba = clf.predict_proba(XValidate)
         accuracy = clf.score(XValidate, YValidate)
-        
+
         estParams = {
             'model': clf
         }
@@ -100,7 +103,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         estParams = {
             'model': clf
         }
-        
+
         classLabels = np.full((len(YValidate), 6), -1, dtype=np.int)
         for i, p in enumerate(proba):
             idx = np.argmax(p)
@@ -108,7 +111,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
                 classLabels[i][-1] = 1
             else:
                 classLabels[i][idx] = 1
-    
+
     estParams['classLabels'] = classLabels
     estParams['accuracy'] = accuracy
 
