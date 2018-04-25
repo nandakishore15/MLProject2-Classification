@@ -14,7 +14,7 @@ def get_parameters(Algorithm='SVM'):
         ]
 
     elif Algorithm == 'RVM':
-        return {}
+        return [{'kernel':'linear'}]
 
     elif Algorithm == 'GPR':
         return [{ 'length_scale': 1.0, 'length_scale_bounds': (1e-05, 100000.0)}]
