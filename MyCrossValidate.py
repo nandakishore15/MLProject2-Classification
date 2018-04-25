@@ -88,10 +88,10 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     # step 4: produce a confusion matrix for all of XTrain using all the class labels
     print 'Starting computing the overall confusion matrix...'
     ConfMatrix = []
-    y_all = flatten(np.array(Ytrain).tolist())
+    y_all = np.concatenate(tuple([Ytrain[i] for i in range(Ytrain.shape[0])]),axis=0)
     ConfMatrix, a = MyConfusionMatrix(Y = y_all, ClassNames = ClassNames, ClassLabels = ClassLabels)
     print 'Finish computing the overall confusion matrix!'
 
     
     # return
-    return (Ytrain, EstParameters, EstConfMatrices, ConfMatrix);
+    return (Ytrain, EstParameters, EstConfMatrices);
