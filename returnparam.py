@@ -1,17 +1,12 @@
 def get_parameters(Algorithm='SVM'):
     if Algorithm == 'SVM':
         params = ['SVM', [
-            {
-                'kernel': ['rbf'],
-                'gamma': [1e-3, 1e-4],
-                'C': [1, 10, 100, 1000]
-            },
-            {
-                'kernel': ['linear'],
-                'gamma': ['auto'],
-                'C': [1, 10, 100, 1000]
-            }
-        ]]
+                    {
+                       'kernel': ['linear'],
+                       'gamma': ['auto'],
+                       'C': [1, 10, 100, 1000]
+                    }
+            ]]
         print(repr(params))
         return params
 
