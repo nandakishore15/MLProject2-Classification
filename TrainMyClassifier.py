@@ -15,7 +15,7 @@ from sklearn.gaussian_process.kernels import RBF
 from time import time
 import numpy as np
 
-def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[], Algorithm):
+def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[]):
 """
 INPUTS:
     XEstimate - Feature vectors on which the model has to be trained
@@ -29,6 +29,7 @@ OUTPUTS:
 """
 
 threshold = 0.5 # metric to classify non-class entry
+Algorithm = Parameters[0]
 
 # extract true labels estimate
 Y_E = []
@@ -57,7 +58,7 @@ for lis in Labels:
 
 if Algorithm == "SVM":
     model = SVC(decision_function_shape='ovo', probability=True)
-    clf = GridSearchCV(model, Parameters, cv=2)
+    clf = GridSearchCV(model, Parameters[1], cv=2)
     clf.fit(XEstimate, Y_E)
     proba = clf.predict_proba(XValidate)
     accuracy = clf.score(XValidate, YValidate)
