@@ -55,7 +55,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     for i in range(0, Nf):
         Xe, Xv, Ce, Cv = E_X[i], V_X[i], E_Y[i], V_Y[i]
         ## Call function 'TrainMyClassifier'. Here I assume all the inputs except 'Parameters' are numpy arrays.
-        [y, par] = TrainMyClassifier(XEstimate = Xe, XValidate = Xv, ClassLabelsEstimate = Ce, ClassLabelsValidate = Cv, Parameters = Parameters)
+        [y, par] = TrainMyClassifier(XEstimate = Xe, XValidate = Xv, YEstimate = Ce, YValidate = Cv, Parameters = Parameters)
         Ytrain.append(y)
         EstParameters.append(par)
     Ytrain, EstParameters = np.asarray(Ytrain), np.asarray(EstParameters)
