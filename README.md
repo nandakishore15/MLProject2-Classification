@@ -2,7 +2,7 @@
 - All the codes in our project are based on Python 2.7
 - Before running our program, please install packages as follow:
   - numpy
-  - scipy.io
+  - scipy
   - sklearn
   - skrvm
   - time
