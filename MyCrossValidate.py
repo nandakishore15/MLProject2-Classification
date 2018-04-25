@@ -46,19 +46,26 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
         E_X.append(np.delete(new_X, range(i*k, (i+1)*k), axis = 0))
         V_Y.append(new_Y[range(i*k, (i+1)*k)])
         E_Y.append(np.delete(new_Y, range(i*k, (i+1)*k), axis = 0))
-    V_X, V_Y, E_X, E_Y = np.asarray(V_X), np.asarray(V_Y), np.asarray(E_X), np.asarray(E_Y)
+    V_X = np.asarray(V_X)
+    V_Y = np.asarray(V_Y)
+    E_X = np.asarray(E_X)
+    E_Y = np.asarray(E_Y)
 
     
     # step 2: estimate parameters and hyper-parameters using En and Vn
     Ytrain = []
     EstParameters = []
     for i in range(0, Nf):
-        Xe, Xv, Ce, Cv = E_X[i], V_X[i], E_Y[i], V_Y[i]
+        Xe = E_X[i]
+        Xv = V_X[i]
+        Ce = E_Y[i]
+        Cv = V_Y[i]
         ## Call function 'TrainMyClassifier'. Here I assume all the inputs except 'Parameters' are numpy arrays.
-        [y, par] = TrainMyClassifier(XEstimate = Xe, XValidate = Xv, YEstimate = Ce, YValidate = Cv, Parameters = Parameters)
+        [y, par] = TrainMyClassifier(XEstimate = Xe, YEstimate = Ce, XValidate = Xv,  YValidate = Cv, Parameters = Parameters)
         Ytrain.append(y)
         EstParameters.append(par)
-    Ytrain, EstParameters = np.asarray(Ytrain), np.asarray(EstParameters)
+    Ytrain = np.asarray(Ytrain)
+    EstParameters = np.asarray(EstParameters)
     
     
     # step 3: produce a confusion matrix Cn, for each Vn
