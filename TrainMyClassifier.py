@@ -104,15 +104,16 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
             'model': clf
         }
 
-        classLabels = np.full((len(YValidate), 6), -1, dtype=np.int)
-        for i, p in enumerate(proba):
-            idx = np.argmax(p)
-            if p[idx] < threshold:
-                classLabels[i][-1] = 1
-            else:
-                classLabels[i][idx] = 1
-
+    classLabels = np.full((len(YValidate), 6), -1, dtype=np.int)
+    for i, p in enumerate(proba):
+        idx = np.argmax(p)
+        if p[idx] < threshold:
+            classLabels[i][-1] = 1
+        else:
+            classLabels[i][idx] = 1
+        
     estParams['classLabels'] = classLabels
     estParams['accuracy'] = accuracy
 
-    return classLabels, estParams
+    return proba, estParams
+

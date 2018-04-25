@@ -25,7 +25,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     """
     
     # the number of samples in 'XTrain'
-    N = np.shape(ClassLabels)[0]
+    N = np.shape(Labels)[0]
     Nc = np.shape(ClassLabels)[1]
     
     
@@ -62,7 +62,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
         Ce = E_Y[i]
         Cv = V_Y[i]
         ## Call function 'TrainMyClassifier'. Here I assume all the inputs except 'Parameters' are numpy arrays.
-        [y, par] = TrainMyClassifier(XEstimate = Xe, YEstimate = Ce, XValidate = Xv,  YValidate = Cv, Parameters = Parameters)
+        y, par = TrainMyClassifier(XEstimate = Xe, YEstimate = Ce, XValidate = Xv,  YValidate = Cv, Parameters = Parameters)
         Ytrain.append(y)
         print 'Finish', (i+1), 'cross validation!'
         EstParameters.append(par)
@@ -73,13 +73,13 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     # step 3: produce a confusion matrix Cn, for each Vn
     EstConfMatrices = []
     ClassNames = range(1, Nc+1)
-    ClassNames = ClassNames.append("NonClass")
+    ClassNames.append("NonClass")
     ClassNames = np.asarray(ClassNames)
     for i in range(0, Nf):
         print 'Starting computing', (i+1), 'confusion matrix...'
         cur_y = Ytrain[i]
         cur_label = V_Y[i]
-        [A, a] = MyConfusionMatrix(Y = cur_y, ClassNames = ClassNames, ClassLabels = cur_label)
+        A, a = MyConfusionMatrix(Y = cur_y, ClassNames = ClassNames, ClassLabels = cur_label)
         print 'Finish', (i+1), 'confusion matrix!'
         EstConfMatrices.append(A)
     EstConfMatrices = np.asarray(EstConfMatrices)
@@ -89,7 +89,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     print 'Starting computing the overall confusion matrix...'
     ConfMatrix = []
     y_all = flatten(np.array(Ytrain).tolist())
-    [ConfMatrix, a] = MyConfusionMatrix(Y = y_all, ClassNames = ClassNames, ClassLabels = ClassLabels)
+    ConfMatrix, a = MyConfusionMatrix(Y = y_all, ClassNames = ClassNames, ClassLabels = ClassLabels)
     print 'Finish computing the overall confusion matrix!'
 
     
