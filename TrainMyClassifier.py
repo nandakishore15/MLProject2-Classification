@@ -41,11 +41,11 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
 
     #TODO Check this with others
 
-    Y_E = np.array(Y_E)
-    validEntries = np.where(Y_E != -1)
+    #Y_E = np.array(Y_E)
+    #validEntries = np.where(Y_E != -1)
 
-    XEstimate = XEstimate[validEntries]
-    Y_E = Y_E[validEntries]
+    #XEstimate = XEstimate[validEntries]
+    #Y_E = Y_E[validEntries]
 
     # extract true labels validate
     Y_V = []
