@@ -87,6 +87,8 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     ConfMatrix = []
     y_all = np.concatenate(tuple([Ytrain[i] for i in range(Ytrain.shape[0])]),axis=0)
     ConfMatrix, a = MyConfusionMatrix(Y = y_all, ClassNames = ClassNames, ClassLabels = new_Y)
+    print 'accuracycf'
+    print a
 
     
     # return

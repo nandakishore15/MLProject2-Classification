@@ -91,15 +91,23 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
 
     elif Algorithm == "GPR":
         # perform PCA on data to reduce time
-        pca = PCA(n_components=8)
-        XEstimate = pca.fit_transform(XEstimate)
-        XValidate = pca.fit_transform(XValidate)
+        # pca = PCA(n_components=8)
+        # XEstimate = pca.fit_transform(XEstimate[:1000,:])
+        # XValidate = pca.fit_transform(XValidate)
 
-        kernal_rbf = RBF(length_scale=1.0, length_scale_bounds=(1e-05, 100000.0))
+        XEstimate = XEstimate[:1000,:]
+        Y_E = Y_E[:1000]
+
+        kernal_rbf = 1*RBF(length_scale=1.0, length_scale_bounds=(1e-05, 100000.0))
         clf = OneVsRestClassifier(GaussianProcessClassifier(kernel = kernal_rbf))
+        print 'fitting'
         clf.fit(XEstimate, Y_E)
+        print 'predicting'
         proba = clf.predict(XValidate)
+        print 'scoring'
         accuracy = clf.score(XValidate, Y_V)
+        print 'accuracy'
+        print accuracy
         estParams = {
             'model': clf
         }
