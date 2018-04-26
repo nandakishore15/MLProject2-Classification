@@ -27,7 +27,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
           EstParams - The estimated parameters corresponding to each algorithm
     """
 
-    threshold = 0.5 # metric to classify non-class entry
+    #threshold = 0.5 # metric to classify non-class entry
     Algorithm = Parameters[0]
 
     # extract true labels estimate
@@ -37,7 +37,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         if 1 in lis:
             Y_E.append(lis.index(1))
         else:
-            Y_E.append(-1)
+            Y_E.append(5)
 
     #TODO Check this with others
 
@@ -54,7 +54,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         if 1 in lis:
             Y_V.append(lis.index(1))
         else:
-            Y_V.append(-1)
+            Y_V.append(5)
 
     Y_V = np.array(Y_V)
 
@@ -79,12 +79,12 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         XEstimate = pca.fit_transform(XEstimate)
         XValidate = pca.fit_transform(XValidate)
 
-        model = RVC(n_iter=1, kernel='linear')
+        model = RVC(n_iter=1, kernel='linear', verbose=True)
         clf = OneVsRestClassifier(model)
         clf.fit(XEstimate, Y_E)
-        proba = clf.predict_proba(XValidate)
+        #proba = clf.predict_proba(XValidate)
+        proba = clf.predict()
         accuracy = clf.score(XValidate, Y_V)
-
         estParams = {
             'model': clf
         }
@@ -98,22 +98,23 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         kernal_rbf = RBF(length_scale=1.0, length_scale_bounds=(1e-05, 100000.0))
         clf = OneVsRestClassifier(GaussianProcessClassifier(kernel = kernal_rbf))
         clf.fit(XEstimate, Y_E)
-        proba = clf.predict_proba(XValidate)
+        proba = clf.predict(XValidate)
         accuracy = clf.score(XValidate, Y_V)
         estParams = {
             'model': clf
         }
 
     classLabels = np.full((len(YValidate), 6), -1, dtype=np.int)
+
     for i, p in enumerate(proba):
-        idx = np.argmax(p)
-        if p[idx] < threshold:
-            classLabels[i][-1] = 1
-        else:
-            classLabels[i][idx] = 1
-        
+        #if p[idx] < threshold:
+        #    classLabels[i][-1] = 1
+        #else:
+        classLabels[i][p] = 1
+
     estParams['classLabels'] = classLabels
     estParams['accuracy'] = accuracy
+    print("Accuracy is: " + str(accuracy))
 
     return classLabels, estParams
 
