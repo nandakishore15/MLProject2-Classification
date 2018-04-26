@@ -15,7 +15,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     INPUTS:
           XTrain: a numpy array, shape = [N, D]
           ClassLabels: a numpy array, shape = [N, Nc], representing the true class labels
-          Parameters: used as a INPUT of 'TrainMyClassifier' function
+          Parameters: used as an INPUT of 'TrainMyClassifier' function, also a return from 'get_parameters' function
           Nf: the number of folds
     RETURNS:
           Ytrain: a numpy array, representing the estimated class labels for each validation sample
