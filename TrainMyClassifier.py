@@ -80,14 +80,26 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         XValidate = pca.fit_transform(XValidate)
 
         model = RVC(n_iter=1, kernel='linear', verbose=True)
-        clf = OneVsRestClassifier(model)
-        clf.fit(XEstimate, Y_E)
-        #proba = clf.predict_proba(XValidate)
-        proba = clf.predict()
-        accuracy = clf.score(XValidate, Y_V)
+        #clf = OneVsRestClassifier(model)
+        model.fit(XEstimate, Y_E)
+        proba = model.predict(XValidate)
+        #proba = clf.predict()
+        accuracy = model.score(XValidate, Y_V)
+
+        classLabels = np.full((len(YValidate), 6), -1, dtype=np.int)
+
+        for i, p in enumerate(proba):
+         classLabels[i][p] = 1
+
+
         estParams = {
-            'model': clf
+         'model': model,
         }
+
+        estParams['classLabels'] = classLabels
+        estParams['accuracy'] = accuracy
+        print("Accuracy is: " + str(accuracy))
+        return classLabels, estParams
 
     elif Algorithm == "GPR":
         # perform PCA on data to reduce time
