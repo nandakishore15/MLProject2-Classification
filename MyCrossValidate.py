@@ -22,6 +22,18 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
           EstParameters: a numpy array of estimated parameters for each Vn (Validation Set)
           EstConfMatrices: a numpy array of confusion matrix for each Vn (Validation Set)
           ConfMatrix: a numpy array, shape = [Nc+1, Nc+1], the overall confusion matrix
+    EXAMPLE:
+          import numpy as np
+          import scipy.io
+          from MyCrossValidate import MyCrossValidate
+          from TrainMyClassifier import *
+          from returnparam import get_parameters
+          
+          XTrain = scipy.io.loadmat('Proj2FeatVecsSet1.mat')['Proj2FeatVecsSet1']
+          YTrain= scipy.io.loadmat('Proj2TargetOutputsSet1.mat')['Proj2TargetOutputsSet1']
+          Params1 = get_parameters(Algorithm = 'SVM')
+          
+          YSVM, EPSVM, ECFSVM, CFSVM = MyCrossValidate(XTrain = XTrain, ClassLabels = YTrain, Nf = 5, Parameters = Params1)
     """
     
     # the number of samples in 'XTrain'

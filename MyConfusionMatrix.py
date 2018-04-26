@@ -17,6 +17,15 @@ def MyConfusionMatrix(Y, ClassNames, ClassLabels):
     RETURNS:
            Confusion matrix: a numpy array, shape = [Nc+1, Nc+1]
            Average accuracy: a number
+    EXAMPLE:
+           import numpy as np
+           from MyConfusionMatrix import MyConfusionMatrix
+           
+           Names = np.asarray(["C1","C2","C3","Non-Class"])
+           Labels = np.array([[-1,-1,1],[1,-1,-1], [-1,-1,1],[-1,-1,1],[1,-1,-1]])
+           Ytrain = np.asarray([[0.8,0.1,0.1,-1],[0.7,0.1,0.2,-1], [0.1,0.4,0.5,-1],[0.05,0.1,0.85,-1], [0.1,0.01,0.1,1]])
+           
+           A, a = MyConfusionMatrix(Y = Ytrain, ClassNames = Names, ClassLabels = Labels)
     """
     
     # the number of known classes
