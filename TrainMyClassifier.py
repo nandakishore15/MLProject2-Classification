@@ -27,7 +27,7 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
           EstParams - The estimated parameters corresponding to each algorithm
     """
 
-    #threshold = 0.5 # metric to classify non-class entry
+    threshold = 0.5 # metric to classify non-class entry
     Algorithm = Parameters[0]
 
     # extract true labels estimate
@@ -94,19 +94,14 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         # pca = PCA(n_components=8)
         # XEstimate = pca.fit_transform(XEstimate[:1000,:])
         # XValidate = pca.fit_transform(XValidate)
-        print XEstimate.shape
-        print len(Y_E)
-
-        XEstimate = XEstimate[:1000,:]
-        Y_E = Y_E[:1000]
 
         kernal_rbf = 1*RBF(length_scale=1.0, length_scale_bounds=(1e-05, 100000.0))
         #clf = OneVsRestClassifier(GaussianProcessClassifier(kernel = kernal_rbf))
-        clf = GaussianProcessClassifier(kernel = kernal_rbf, multi_class = 'one_vs_one')
+        clf = GaussianProcessClassifier(kernel = kernal_rbf, multi_class = 'one_vs_rest')
         print 'fitting'
         clf.fit(XEstimate, Y_E)
         print 'predicting'
-        proba = clf.predict(XValidate)
+        proba = clf.predict_proba(XValidate)
         print 'scoring'
         accuracy = clf.score(XValidate, Y_V)
         print 'accuracy'
@@ -118,10 +113,12 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
     classLabels = np.full((len(YValidate), 6), -1, dtype=np.int)
 
     for i, p in enumerate(proba):
-        #if p[idx] < threshold:
-        #    classLabels[i][-1] = 1
-        #else:
-        classLabels[i][p] = 1
+        idx = np.argmax(p)
+        if p[idx] < threshold:
+           classLabels[i][-1] = 1
+        else:
+            # print p
+            classLabels[i][idx] = 1
 
     estParams['classLabels'] = classLabels
     estParams['accuracy'] = accuracy
