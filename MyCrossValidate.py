@@ -76,17 +76,24 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     ClassNames.append("Unseen")
     ClassNames = np.asarray(ClassNames)
     for i in range(0, Nf):
+        print 'Starting computing', (i+1), 'confusion matrix...'
         cur_y = Ytrain[i]
         cur_label = V_Y[i]
         A, a = MyConfusionMatrix(Y = cur_y, ClassNames = ClassNames, ClassLabels = cur_label)
+        print 'Finish', (i+1), 'confusion matrix!'
+        print a
         EstConfMatrices.append(A)
     EstConfMatrices = np.asarray(EstConfMatrices)
     
     
     # step 4: produce a confusion matrix for all of XTrain using all the class labels
+    print 'Starting computing the overall confusion matrix...'
     ConfMatrix = []
     y_all = np.concatenate(tuple([Ytrain[i] for i in range(Ytrain.shape[0])]),axis=0)
     ConfMatrix, a = MyConfusionMatrix(Y = y_all, ClassNames = ClassNames, ClassLabels = new_Y)
+    print 'Finish computing the overall confusion matrix!'
+    print 'accuracy for overall cf'
+    print a
 
     
     # return
