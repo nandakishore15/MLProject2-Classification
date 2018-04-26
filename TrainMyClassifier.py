@@ -94,12 +94,15 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         # pca = PCA(n_components=8)
         # XEstimate = pca.fit_transform(XEstimate[:1000,:])
         # XValidate = pca.fit_transform(XValidate)
+        print XEstimate.shape
+        print len(Y_E)
 
         XEstimate = XEstimate[:1000,:]
         Y_E = Y_E[:1000]
 
         kernal_rbf = 1*RBF(length_scale=1.0, length_scale_bounds=(1e-05, 100000.0))
-        clf = OneVsRestClassifier(GaussianProcessClassifier(kernel = kernal_rbf))
+        #clf = OneVsRestClassifier(GaussianProcessClassifier(kernel = kernal_rbf))
+        clf = GaussianProcessClassifier(kernel = kernal_rbf, multi_class = 'one_vs_one')
         print 'fitting'
         clf.fit(XEstimate, Y_E)
         print 'predicting'
