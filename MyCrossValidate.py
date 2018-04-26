@@ -73,7 +73,7 @@ def MyCrossValidate(XTrain, ClassLabels, Nf, Parameters):
     # step 3: produce a confusion matrix Cn, for each Vn
     EstConfMatrices = []
     ClassNames = range(1, Nc+1)
-    ClassNames.append("NonClass")
+    ClassNames.append("Unseen")
     ClassNames = np.asarray(ClassNames)
     for i in range(0, Nf):
         cur_y = Ytrain[i]
