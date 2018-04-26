@@ -14,14 +14,14 @@ def TestMyClassifier(XTest, Parameters, EstParameters):
     """
     Algorithm = Parameters[0]
     threshold = 0.5
-    clf = EstParameters['model']
+    clf = EstParameters[0]['model']
 
     #Predict probabilities
     proba = clf.predict_proba(XTest)
 
     num_samples = np.shape(XTest)[0]
 
-    YTest = np.full((len(num_samples), 6), -1, dtype=np.int)
+    YTest = np.full((num_samples, 6), -1, dtype=np.int)
 
     for i, p in enumerate(proba):
         idx = np.argmax(p)
