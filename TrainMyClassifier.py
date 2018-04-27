@@ -39,14 +39,6 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
         else:
             Y_E.append(5)
 
-    #TODO Check this with others
-
-    #Y_E = np.array(Y_E)
-    #validEntries = np.where(Y_E != -1)
-
-    #XEstimate = XEstimate[validEntries]
-    #Y_E = Y_E[validEntries]
-
     # extract true labels validate
     Y_V = []
     Labels = YValidate.tolist()
@@ -75,31 +67,70 @@ def TrainMyClassifier(XEstimate, YEstimate, XValidate, YValidate, Parameters=[])
 
     elif Algorithm == "RVM":
         # perform PCA on data to reduce time
-        pca = PCA(n_components=8)
-        XEstimate = pca.fit_transform(XEstimate)
-        XValidate = pca.fit_transform(XValidate)
+        Y_E = np.array(Y_E)
+        #pca = PCA(n_components=8)
+        #XEstimate = pca.fit_transform(XEstimate)
+        #XValidate = pca.fit_transform(XValidate)
 
-        model = RVC(n_iter=1, kernel='linear', verbose=True)
-        #clf = OneVsRestClassifier(model)
-        model.fit(XEstimate, Y_E)
-        proba = model.predict(XValidate)
-        #proba = clf.predict()
-        accuracy = model.score(XValidate, Y_V)
+        threshold = 0.3
 
-        classLabels = np.full((len(YValidate), 6), -1, dtype=np.int)
+        posn, XEstimate_Fraction, Y_E_Fraction = {}, {}, {}
 
-        for i, p in enumerate(proba):
-         classLabels[i][p] = 1
+        Nc = 5
 
+        for i in range(Nc):
+            posn[i] = np.where(Y_E == i)
 
+        for i in range(Nc):
+            XEstimate_Fraction[i] = XEstimate[posn[i]]
+            Y_E_Fraction[i] = Y_E[posn[i]]
+
+        size = np.shape(XValidate)[0]
+        predict_proba = np.zeros((size, 5))
+        num_rvectors = []
+
+        classifierObjs = []
+
+        for i in range(Nc):
+        	for j in range(i+1, Nc):
+        		classifierObjs.append(RVC(n_iter=1, kernel = 'linear'))
+        		classifierObjs[-1].fit(np.concatenate((XEstimate_Fraction[i], XEstimate_Fraction[j]), axis = 0), np.concatenate((Y_E_Fraction[i], Y_E_Fraction[j]), axis = 0))
+        		sc_proba = classifierObjs[-1].predict_proba(XValidate)
+
+        		predict_proba[:, i] += sc_proba[:, 0]
+        		predict_proba[:, j] += sc_proba[:, 1]
+
+        		num_rvectors.append(classifierObjs[-1].relevance_.shape[0])
+
+        proba = predict_proba / 10
+
+        count1 = count2 = 0
+
+        #print(proba)
+        
+        for i in range(len(predict_proba)):
+    		pos = predict_proba[i].argmax(axis=0)
+    		if pos == Y_V[i]:
+        		if predict_proba[i][pos] > 0.3:
+        			count1 += 1
+        		count2 += 1
+
+        accuracy = float(count1)/len(predict_proba)
+        
+        #print("Inside accuracy < 0.3 is" + str(accuracy))
+
+        accuracy = float(count2)/len(predict_proba)
+        
+        #print("Inside accuracy is" + str(accuracy))
+
+        avg_rvectors = np.average(num_rvectors)
+
+        print("Average number of relevance vectors: " + str(avg_rvectors))
+        
         estParams = {
-         'model': model,
+         'model': classifierObjs,
+         'avg_rel_vectors': avg_rvectors
         }
-
-        estParams['classLabels'] = classLabels
-        estParams['accuracy'] = accuracy
-        print("Accuracy is: " + str(accuracy))
-        return classLabels, estParams
 
     elif Algorithm == "GPR":
         # perform PCA on data to reduce time

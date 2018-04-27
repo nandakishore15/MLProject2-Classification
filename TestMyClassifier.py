@@ -2,7 +2,7 @@
 Author: Bhavesh Poddar, Nanda Kishore, Vineeth Chennapalli
 """
 
-def TestMyClassifier(XTest, Parameters, EstParameters, YPred):
+def TestMyClassifier(XTest, Parameters, EstParameters):
     """
     INPUT:
         XTest - Data on which the pre-trained model is tested
@@ -15,28 +15,28 @@ def TestMyClassifier(XTest, Parameters, EstParameters, YPred):
     import numpy as np
     from sklearn.decomposition import PCA
     Algorithm = Parameters[0]
+    print(Algorithm)
     threshold = 0.5
     clf = EstParameters[0]['model']
 
-
-    if Algorithm == 'RVM':
-        pca = PCA(n_components=8)
-        XTest = pca.fit_transform(XTest)
-        proba = clf.predict(XTest)
-
-        num_samples = np.shape(XTest)[0]
-
-        YTest = np.full((num_samples, 6), -1, dtype=np.int)
-
-        for i, p in enumerate(proba):
-            YTest[i][p] = 1
-
-        return YTest
-
-    #Predict probabilities
-    proba = clf.predict_proba(XTest)
-
     num_samples = np.shape(XTest)[0]
+
+    if Algorithm == "RVM":
+        threshold = 0.3
+        predict_proba = np.zeros((num_samples, 5))
+        objNum = 0
+        for i in range(5):
+            for j in range(i+1, 5):
+                proba = clf[objNum].predict_proba(XTest)
+                predict_proba[:, i] += proba[:, 0]
+                predict_proba[:, j] += proba[:, 1]
+                objNum += 1
+
+        proba = predict_proba / 10
+
+    else:
+    #Predict probabilities
+        proba = clf.predict_proba(XTest)
 
     YTest = np.full((num_samples, 6), -1, dtype=np.int)
 
